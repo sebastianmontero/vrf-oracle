@@ -81,6 +81,9 @@ func Migrate(tx *gorm.DB) error {
 	if err := tx.AutoMigrate(&models.User{}).Error; err != nil {
 		return errors.Wrap(err, "failed to auto migrate User")
 	}
+	if err := tx.AutoMigrate(&models.VRFRequest{}).Error; err != nil {
+		return errors.Wrap(err, "failed to auto migrate VRFRequest")
+	}
 	return nil
 }
 
