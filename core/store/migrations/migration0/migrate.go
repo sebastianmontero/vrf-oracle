@@ -84,6 +84,24 @@ func Migrate(tx *gorm.DB) error {
 	if err := tx.AutoMigrate(&models.VRFRequest{}).Error; err != nil {
 		return errors.Wrap(err, "failed to auto migrate VRFRequest")
 	}
+	if err := tx.AutoMigrate(&models.VRFRequestJob{}).Error; err != nil {
+		return errors.Wrap(err, "failed to auto migrate VRFRequestRun")
+	}
+	if err := tx.AutoMigrate(&models.VRFRequestRun{}).Error; err != nil {
+		return errors.Wrap(err, "failed to auto migrate VRFRequestRun")
+	}
+	if err := tx.AutoMigrate(&models.Cursor{}).Error; err != nil {
+		return errors.Wrap(err, "failed to auto migrate Cursor")
+	}
+
+	if err := tx.Model(&models.VRFRequestRun{}).AddForeignKey("vrf_request_job_id", "vrf_request_jobs(id)", "RESTRICT", "RESTRICT").Error; err != nil {
+		return errors.Wrap(err, "failed to add VRFRequestRun -> VRFRequestJob foreign key")
+	}
+
+	if err := tx.Model(&models.VRFRequestJob{}).AddForeignKey("vrf_request_id", "vrf_requests(id)", "RESTRICT", "RESTRICT").Error; err != nil {
+		return errors.Wrap(err, "failed to add VRFRequestJob -> VRFRequest foreign key")
+	}
+
 	return nil
 }
 

@@ -16,9 +16,10 @@ type ProofResponse struct {
 	// Approximately the proof which will be checked on-chain. Note that this
 	// contains the pre-seed in place of the final seed. That should be computed
 	// as in FinalSeed.
-	P        Proof
-	PreSeed  Seed   // Seed received during VRF request
-	BlockNum uint64 // Height of the block in which tihs request was made
+	P         Proof
+	PreSeed   Seed        // Seed received during VRF request
+	BlockNum  uint64      // Height of the block in which tihs request was made
+	BlockHash common.Hash // hash of the block
 }
 
 // OnChainResponseLength is the length of the MarshaledOnChainResponse. The
@@ -100,4 +101,29 @@ func GenerateProofResponse(secretKey common.Hash, s PreSeedData) (
 		return MarshaledOnChainResponse{}, err
 	}
 	return rv, nil
+}
+
+// GenerateUnmarshaledProofResponse returns the proof of the VRF output given the
+// secretKey and the seed computed from the s.PreSeed and the s.BlockHash
+func GenerateUnmarshaledProofResponse(secretKey common.Hash, s PreSeedData) (
+	*ProofResponse, error) {
+	seed := FinalSeed(s)
+	proof, err := GenerateProof(secretKey, common.BigToHash(seed))
+	if err != nil {
+		return nil, err
+	}
+	return &ProofResponse{P: proof, PreSeed: s.PreSeed, BlockNum: s.BlockNum, BlockHash: s.BlockHash}, nil
+}
+
+// GenerateEOSProofResponse returns the proof of the VRF output given the
+// secretKey and the seed computed from the s.PreSeed and the s.BlockHash
+func GenerateEOSProofResponse(secretKey common.Hash, s PreSeedData) (
+	*EOSProofResponse, error) {
+	seed := FinalSeed(s)
+	proof, err := GenerateProof(secretKey, common.BigToHash(seed))
+	if err != nil {
+		return nil, err
+	}
+	pr := &ProofResponse{P: proof, PreSeed: s.PreSeed, BlockNum: s.BlockNum, BlockHash: s.BlockHash}
+	return NewEOSProofResponse(pr), nil
 }

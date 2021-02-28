@@ -54,6 +54,40 @@ func (ks *VRFKeyStore) GenerateProof(k vrfkey.PublicKey, i vrf.PreSeedData) (
 	return privateKey.MarshaledProof(i)
 }
 
+// GenerateUnmarshaledProof is randomness proof given k and VRF input seed
+// computed from the SeedData
+//
+// Key must have already been unlocked in ks, as constructing the VRF proof
+// requires the secret key.
+func (ks *VRFKeyStore) GenerateUnmarshaledProof(k vrfkey.PublicKey, i vrf.PreSeedData) (
+	*vrf.ProofResponse, error) {
+	ks.lock.RLock()
+	defer ks.lock.RUnlock()
+	privateKey, found := ks.keys[k]
+	if !found {
+		return nil, fmt.Errorf(
+			"key %s has not been unlocked", k)
+	}
+	return privateKey.Proof(i)
+}
+
+// GenerateEOSProof is randomness proof given k and VRF input seed
+// computed from the SeedData
+//
+// Key must have already been unlocked in ks, as constructing the VRF proof
+// requires the secret key.
+func (ks *VRFKeyStore) GenerateEOSProof(k vrfkey.PublicKey, i vrf.PreSeedData) (
+	*vrf.EOSProofResponse, error) {
+	ks.lock.RLock()
+	defer ks.lock.RUnlock()
+	privateKey, found := ks.keys[k]
+	if !found {
+		return nil, fmt.Errorf(
+			"key %s has not been unlocked", k)
+	}
+	return privateKey.EOSProof(i)
+}
+
 // Unlock tries to unlock each vrf key in the db, using the given pass phrase,
 // and returns any keys it manages to unlock, and any errors which result.
 func (ks *VRFKeyStore) Unlock(phrase string) (keysUnlocked []vrfkey.PublicKey,

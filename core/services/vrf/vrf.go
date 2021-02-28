@@ -52,6 +52,11 @@ func bigFromHex(s string) *big.Int {
 	return n
 }
 
+var (
+	maxUint64  = big.NewInt(0).SetUint64(^uint64(0))
+	maxUint256 = big.NewInt(0).Sub(big.NewInt(0).Exp(big.NewInt(2), big.NewInt(256), nil), big.NewInt(1))
+)
+
 // FieldSize is number of elements in secp256k1's base field, i.e. GF(FieldSize)
 var FieldSize = bigFromHex(
 	"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFC2F")
@@ -130,6 +135,11 @@ func uint256ToBytes32(x *big.Int) []byte {
 		panic("vrf.uint256ToBytes32: too big to marshal to uint256")
 	}
 	return common.LeftPadBytes(x.Bytes(), 32)
+}
+
+func scaleBigToUint64(toScale *big.Int) uint64 {
+	scaled := big.NewInt(0).Set(toScale)
+	return scaled.Mul(scaled, maxUint64).Div(scaled, maxUint256).Uint64()
 }
 
 // FieldHash hashes xs uniformly into {0, ..., fieldSize-1}. msg is assumed to
@@ -213,6 +223,7 @@ type Proof struct {
 	S         *big.Int
 	Seed      *big.Int // Seed input to verifiable random function
 	Output    *big.Int // verifiable random function output;, uniform uint256 sample
+	OutputU64 uint64   // verifiable random function output;, uniform uint64 sample
 }
 
 func (p *Proof) String() string {
@@ -301,13 +312,15 @@ func generateProofWithNonce(secretKey, seed, nonce *big.Int) (Proof, error) {
 	}
 	outputHash := utils.MustHash(string(append(vrfRandomOutputHashPrefix,
 		secp256k1.LongMarshal(gamma)...)))
+	output := outputHash.Big()
 	rv := Proof{
 		PublicKey: publicKey,
 		Gamma:     gamma,
 		C:         c,
 		S:         s,
 		Seed:      seed,
-		Output:    outputHash.Big(),
+		Output:    output,
+		OutputU64: scaleBigToUint64(output),
 	}
 	valid, err := rv.VerifyVRFProof()
 	if !valid || err != nil {

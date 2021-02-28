@@ -58,6 +58,18 @@ func (k *PrivateKey) MarshaledProof(i vrf.PreSeedData) (
 	return vrf.GenerateProofResponse(secp256k1.ScalarToHash(k.k), i)
 }
 
+// Proof is a VRF proof of randomness using i.Key and seed
+func (k *PrivateKey) Proof(i vrf.PreSeedData) (
+	*vrf.ProofResponse, error) {
+	return vrf.GenerateUnmarshaledProofResponse(secp256k1.ScalarToHash(k.k), i)
+}
+
+// EOSProof is a VRF proof of randomness using i.Key and seed
+func (k *PrivateKey) EOSProof(i vrf.PreSeedData) (
+	*vrf.EOSProofResponse, error) {
+	return vrf.GenerateEOSProofResponse(secp256k1.ScalarToHash(k.k), i)
+}
+
 // gethKey returns the geth keystore representation of k. Do not abuse this to
 // convert a VRF key to an ethereum key!
 func (k *PrivateKey) gethKey() *keystore.Key {
