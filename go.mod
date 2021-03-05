@@ -10,6 +10,11 @@ require (
 	github.com/bmizerany/assert v0.0.0-20160611221934-b7ed37b82869
 	github.com/btcsuite/btcd v0.21.0-beta
 	github.com/danielkov/gin-helmet v0.0.0-20171108135313-1387e224435e
+	github.com/dfuse-io/bstream v0.0.2-0.20210105170217-db7e8fd1e9ed
+	github.com/dfuse-io/dfuse-eosio v0.1.1-docker.0.20210106190033-47b917933e19
+	github.com/dfuse-io/pbgo v0.0.6-0.20210108215028-712d6889e94a
+	github.com/digital-scarcity/eos-go-test v0.0.0-20201030135239-784ff05708c0
+	github.com/eoscanada/eos-go v0.9.1-0.20201207210541-96d4aeb4bab1
 	github.com/ethereum/go-ethereum v1.9.25
 	github.com/fatih/color v1.10.0
 	github.com/fxamacker/cbor/v2 v2.2.0
@@ -24,6 +29,7 @@ require (
 	github.com/gorilla/websocket v1.4.2
 	github.com/jinzhu/gorm v1.9.16
 	github.com/jpillora/backoff v1.0.0
+	github.com/k0kubun/go-ansi v0.0.0-20180517002512-3bf9e2903213
 	github.com/lib/pq v1.8.0
 	github.com/libp2p/go-libp2p-core v0.8.0
 	github.com/libp2p/go-libp2p-peerstore v0.2.6
@@ -39,6 +45,8 @@ require (
 	github.com/prometheus/client_golang v1.9.0
 	github.com/robfig/cron/v3 v3.0.1
 	github.com/satori/go.uuid v1.2.0
+	github.com/schollz/progressbar/v3 v3.7.4
+	github.com/sebastianmontero/dfuse-firehose-client v0.0.0-20210213204324-2c75717bc9ca
 	github.com/shopspring/decimal v1.2.0
 	github.com/smartcontractkit/libocr v0.0.0-20210114170344-699624b8b9fa
 	github.com/spf13/viper v1.7.1
@@ -55,7 +63,7 @@ require (
 	go.uber.org/zap v1.16.0
 	golang.org/x/crypto v0.0.0-20201221181555-eec23a3978ad
 	golang.org/x/sync v0.0.0-20201020160332-67f06af15bc9
-	golang.org/x/term v0.0.0-20201126162022-7de9c90e9dd1
+	golang.org/x/term v0.0.0-20201210144234-2321bbc49cbf
 	golang.org/x/text v0.3.4
 	golang.org/x/tools v0.0.0-20201211185031-d93e913c1a58
 	gonum.org/v1/gonum v0.8.2

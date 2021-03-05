@@ -8,7 +8,7 @@ import (
 	"github.com/sebastianmontero/vrf-oracle/core/store/orm"
 )
 
-func main1() {
+func main() {
 	Run(NewProductionClient(), os.Args...)
 }
 

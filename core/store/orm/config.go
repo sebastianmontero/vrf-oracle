@@ -919,6 +919,51 @@ func (c Config) SessionOptions() sessions.Options {
 	}
 }
 
+// EOSURL represents the URL of the EOS node to connect to.
+func (c Config) EOSURL() string {
+	return c.viper.GetString(EnvVarName("EOSURL"))
+}
+
+// FirehoseEndpoint represents the dfuse firehose endpoint
+func (c Config) FirehoseEndpoint() string {
+	return c.viper.GetString(EnvVarName("FirehoseEndpoint"))
+}
+
+// DFuseAPIKey represents the dfuse api key
+func (c Config) DFuseAPIKey() string {
+	return c.viper.GetString(EnvVarName("DFuseAPIKey"))
+}
+
+// VRFMaxRetries number of retries to resolve a VRFRequest
+func (c Config) VRFMaxRetries() uint8 {
+	return c.getWithFallback("VRFMaxRetries", parseUint8).(uint8)
+}
+
+// VRFStartBlockNum block num to start streaming from
+func (c Config) VRFStartBlockNum() int64 {
+	return c.getWithFallback("VRFStartBlockNum", parseInt64).(int64)
+}
+
+// VRFContract name of the vrf contract
+func (c Config) VRFContract() string {
+	return c.viper.GetString(EnvVarName("VRFContract"))
+}
+
+// VRFJobTable name of the jobs table of the vrf contract
+func (c Config) VRFJobTable() string {
+	return c.viper.GetString(EnvVarName("VRFJobTable"))
+}
+
+// VRFContractKey key of the vrf contract
+func (c Config) VRFContractKey() string {
+	return c.viper.GetString(EnvVarName("VRFContractKey"))
+}
+
+// VRFKeyStorePassword key of the vrf contract
+func (c Config) VRFKeyStorePassword() string {
+	return c.viper.GetString(EnvVarName("VRFKeyStorePassword"))
+}
+
 func (c Config) getWithFallback(name string, parser func(string) (interface{}, error)) interface{} {
 	str := c.viper.GetString(EnvVarName(name))
 	defaultValue, hasDefault := defaultValue(name)
@@ -1013,6 +1058,11 @@ func parseUint32(s string) (interface{}, error) {
 func parseUint64(s string) (interface{}, error) {
 	v, err := strconv.ParseUint(s, 10, 64)
 	return v, err
+}
+
+func parseInt64(s string) (interface{}, error) {
+	v, err := strconv.ParseInt(s, 10, 64)
+	return int64(v), err
 }
 
 func parseURL(s string) (interface{}, error) {

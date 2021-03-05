@@ -1,6 +1,8 @@
 package orm
 
 import (
+	"errors"
+
 	"github.com/jinzhu/gorm"
 	"github.com/sebastianmontero/vrf-oracle/core/store/models"
 )
@@ -68,7 +70,11 @@ func (orm *ORM) FindCursor(id models.CursorID) (*models.Cursor, error) {
 	if err := orm.MustEnsureAdvisoryLock(); err != nil {
 		return cursor, err
 	}
-	return cursor, orm.DB.First(cursor, "id = ?", id).Error
+	err := orm.DB.First(cursor, "id = ?", id).Error
+	if !errors.Is(err, gorm.ErrRecordNotFound) {
+		return cursor, err
+	}
+	return cursor, nil
 }
 
 // SaveVRFRequestJob looks up a VRFRequestJob by its ID.

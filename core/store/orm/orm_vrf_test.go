@@ -4,6 +4,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/lib/pq"
 	"github.com/sebastianmontero/vrf-oracle/core/internal/cltest"
 	"github.com/sebastianmontero/vrf-oracle/core/store/models"
 	"github.com/sebastianmontero/vrf-oracle/core/store/orm"
@@ -19,7 +20,9 @@ func TestORM_CreateVRFRequest(t *testing.T) {
 
 	req1 := &models.VRFRequest{
 		AssocID:   1,
-		Seed:      2,
+		BlockNum:  395235,
+		BlockHash: "000607e21b8d9da0ade735bcd19a9f8812335b510482d4b9f8c53753e0ebe9c8",
+		Seeds:     pq.StringArray([]string{"2", "3"}),
 		Frequency: "* * * * *",
 		Count:     1,
 		Caller:    "user1",
@@ -42,6 +45,19 @@ func TestORM_CreateVRFRequest(t *testing.T) {
 	validateVRFRequest(req2, req1, t)
 }
 
+func TestORM_FindCursor(t *testing.T) {
+	t.Parallel()
+	store, cleanup := cltest.NewStore(t)
+	defer cleanup()
+
+	cursor, err := store.FindCursor("non existant id")
+	require.NoError(t, err)
+	validateCursor(cursor, &models.Cursor{
+		ID:     "",
+		Cursor: "",
+	}, t)
+}
+
 func TestORM_CreateVRFRequestWithCursor(t *testing.T) {
 	t.Parallel()
 	store, cleanup := cltest.NewStore(t)
@@ -49,7 +65,9 @@ func TestORM_CreateVRFRequestWithCursor(t *testing.T) {
 
 	req1 := &models.VRFRequest{
 		AssocID:   1,
-		Seed:      2,
+		BlockNum:  395235,
+		BlockHash: "000607e21b8d9da0ade735bcd19a9f8812335b510482d4b9f8c53753e0ebe9c8",
+		Seeds:     pq.StringArray([]string{"2", "3"}),
 		Frequency: "* * * * 1",
 		Count:     1,
 		Caller:    "user2",
@@ -82,7 +100,9 @@ func TestORM_SaveVRFRequest(t *testing.T) {
 
 	req1 := &models.VRFRequest{
 		AssocID:   1,
-		Seed:      2,
+		BlockNum:  395235,
+		BlockHash: "000607e21b8d9da0ade735bcd19a9f8812335b510482d4b9f8c53753e0ebe9c8",
+		Seeds:     pq.StringArray([]string{"2", "3"}),
 		Frequency: "* * * * *",
 		Count:     1,
 		Caller:    "user1",
@@ -101,7 +121,7 @@ func TestORM_SaveVRFRequest(t *testing.T) {
 	validateVRFRequest(req2, req1, t)
 
 	updatedAt := req2.UpdatedAt
-	req1.Seed = 3
+	req1.Seeds = pq.StringArray([]string{"2"})
 	req1.Frequency = "1 * * * *"
 	req1.Count = 2
 	req1.Caller = "user2"
@@ -126,7 +146,9 @@ func TestORM_SaveVRFRequestWithCursor(t *testing.T) {
 
 	req1 := &models.VRFRequest{
 		AssocID:   1,
-		Seed:      2,
+		BlockNum:  395235,
+		BlockHash: "000607e21b8d9da0ade735bcd19a9f8812335b510482d4b9f8c53753e0ebe9c8",
+		Seeds:     pq.StringArray([]string{"2", "3"}),
 		Frequency: "* * * * *",
 		Count:     1,
 		Caller:    "user1",
@@ -155,7 +177,7 @@ func TestORM_SaveVRFRequestWithCursor(t *testing.T) {
 
 	cursor1.Cursor = "c2"
 
-	req1.Seed = 3
+	req1.Seeds = pq.StringArray([]string{"3"})
 	req1.Frequency = "1 * * * *"
 	req1.Count = 2
 	req1.Caller = "user2"
@@ -180,7 +202,9 @@ func TestORM_SaveVRFRequestOptimisticLocking(t *testing.T) {
 
 	req1 := &models.VRFRequest{
 		AssocID:   1,
-		Seed:      2,
+		BlockNum:  395235,
+		BlockHash: "000607e21b8d9da0ade735bcd19a9f8812335b510482d4b9f8c53753e0ebe9c8",
+		Seeds:     pq.StringArray([]string{"2", "3"}),
 		Frequency: "* * * * *",
 		Count:     1,
 		Caller:    "user1",
@@ -206,7 +230,9 @@ func TestORM_SaveVRFRequestJob(t *testing.T) {
 
 	req1 := &models.VRFRequest{
 		AssocID:   1,
-		Seed:      2,
+		BlockNum:  395235,
+		BlockHash: "000607e21b8d9da0ade735bcd19a9f8812335b510482d4b9f8c53753e0ebe9c8",
+		Seeds:     pq.StringArray([]string{"2", "3"}),
 		Frequency: "* * * * *",
 		Count:     1,
 		Caller:    "user1",
@@ -240,10 +266,10 @@ func TestORM_SaveVRFRequestRun(t *testing.T) {
 	store, cleanup := cltest.NewStore(t)
 	defer cleanup()
 
-	seed := uint64(5)
+	seed := "5"
 	req1 := &models.VRFRequest{
 		AssocID:   3,
-		Seed:      seed,
+		Seeds:     pq.StringArray([]string{seed}),
 		Frequency: "1 * * * *",
 		Count:     2,
 		Caller:    "user3",
@@ -276,7 +302,7 @@ func TestORM_SaveVRFRequestRun(t *testing.T) {
 		StatusMsg:       "Success",
 	}
 
-	req1.Seed = 10
+	req1.Seeds = pq.StringArray([]string{"2"})
 	job1.Status = models.VRFRequestJobStatus_ACTIVE
 
 	err = store.SaveVRFRequestRun(run1, false)
@@ -292,7 +318,7 @@ func TestORM_SaveVRFRequestRun(t *testing.T) {
 
 	req2, err := store.FindVRFRequest(req1.ID)
 	require.NoError(t, err)
-	assert.Equalf(t, seed, req2.Seed, "Seed must match old value")
+	assert.Equalf(t, seed, req2.Seeds[0], "Seed must match old value")
 
 	run1.Status = models.VRFRequestRunStatus_FAILED
 	run1.StatusMsg = "Error"
@@ -317,7 +343,9 @@ func TestORM_SaveVRFRequestRun(t *testing.T) {
 func validateVRFRequest(actual *models.VRFRequest, expected *models.VRFRequest, t *testing.T) {
 	assert.Equal(t, actual.ID, expected.ID)
 	assert.Equal(t, actual.AssocID, expected.AssocID)
-	assert.Equal(t, actual.Seed, expected.Seed)
+	assert.Equal(t, actual.BlockNum, expected.BlockNum)
+	assert.Equal(t, actual.BlockHash, expected.BlockHash)
+	assert.Equal(t, actual.Seeds, expected.Seeds)
 	assert.Equal(t, actual.Frequency, expected.Frequency)
 	assert.Equal(t, actual.Count, expected.Count)
 	assert.Equal(t, actual.Caller, expected.Caller)

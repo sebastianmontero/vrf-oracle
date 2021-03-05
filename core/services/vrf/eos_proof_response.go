@@ -10,21 +10,23 @@ import (
 
 //EOSProofResponse Proof response sent to an eosio chain
 type EOSProofResponse struct {
-	BlockNum   uint64 `json:"block_num,omitempty"`
-	BlockID    string `json:"block_id,omitempty"`
-	Seed       uint64 `json:"seed,omitempty"`
-	FinalSeed  string `json:"final_seed,omitempty"`
-	PublicKey  string `json:"public_key,omitempty"`
-	Gamma      string `json:"gamma,omitempty"`
-	C          string `json:"c,omitempty"`
-	S          string `json:"s,omitempty"`
-	OutputU256 string `json:"output_u256,omitempty"`
-	OutputU64  uint64 `json:"output_u64,omitempty"`
+	BlockNum   uint64 `json:"block_num"`
+	BlockID    string `json:"block_id"`
+	Seed       uint64 `json:"seed"`
+	FinalSeed  string `json:"final_seed"`
+	PublicKey  string `json:"public_key"`
+	Gamma      string `json:"gamma"`
+	C          string `json:"c"`
+	S          string `json:"s"`
+	OutputU256 string `json:"output_u256"`
+	OutputU64  uint64 `json:"output_u64"`
 }
 
 //NewEOSProofResponse Creates an EOSProofResponse from a ProofResponse
 func NewEOSProofResponse(pr *ProofResponse) *EOSProofResponse {
 	return &EOSProofResponse{
+		BlockNum:   pr.BlockNum,
+		BlockID:    pr.BlockHash.String(),
 		Seed:       pr.PreSeed.Big().Uint64(),
 		FinalSeed:  pr.P.Seed.Text(10),
 		PublicKey:  encodeKyberPoint(&pr.P.PublicKey),
@@ -33,8 +35,6 @@ func NewEOSProofResponse(pr *ProofResponse) *EOSProofResponse {
 		S:          pr.P.S.Text(10),
 		OutputU256: pr.P.Output.Text(10),
 		OutputU64:  pr.P.OutputU64,
-		BlockNum:   pr.BlockNum,
-		BlockID:    pr.BlockHash.String(),
 	}
 }
 
@@ -42,7 +42,7 @@ func (m *EOSProofResponse) String() string {
 	return fmt.Sprintf(
 		"EOSProofResponse{ BlockNum: %v, BlockID: %v, Seed: %v, FinalSeed: %v, PublicKey: %v, Gamma: %v, C: %v, S: %v, OutputU256: %v, OutputU64: %v}",
 		m.BlockNum,
-		m.BlockID,
+		string(m.BlockID),
 		m.Seed,
 		m.FinalSeed,
 		m.PublicKey,

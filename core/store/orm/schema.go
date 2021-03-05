@@ -122,6 +122,15 @@ type ConfigSchema struct {
 	TxAttemptLimit                            uint16          `env:"CHAINLINK_TX_ATTEMPT_LIMIT" default:"10"`
 	UnAuthenticatedRateLimit                  int64           `env:"UNAUTHENTICATED_RATE_LIMIT" default:"5"`
 	UnAuthenticatedRateLimitPeriod            time.Duration   `env:"UNAUTHENTICATED_RATE_LIMIT_PERIOD" default:"20s"`
+	EOSURL                                    string          `env:"EOS_URL" default:"http://127.0.0.1:8888"`
+	FirehoseEndpoint                          string          `env:"FIREHOSE_ENDPOINT" default:"172.17.0.1:9000"`
+	DFuseAPIKey                               string          `env:"DFUSE_API_KEY"`
+	VRFMaxRetries                             uint8           `env:"VRF_MAX_RETRIES" default:"3"`
+	VRFStartBlockNum                          int64           `env:"VRF_START_BLOCK_NUM"`
+	VRFContract                               string          `env:"VRF_CONTRACT"`
+	VRFJobTable                               string          `env:"VRF_JOB_TABLE" default:"jobs"`
+	VRFContractKey                            string          `env:"VRF_CONTRACT_KEY"`
+	VRFKeyStorePassword                       string          `env:"VRF_KEY_STORE_PASSWORD"`
 }
 
 // EnvVarName gets the environment variable name for a config schema field
