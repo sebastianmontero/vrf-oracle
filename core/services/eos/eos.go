@@ -36,8 +36,8 @@ func (m *EOS) AddKey(pkey string) error {
 func (m *EOS) Trx(actions ...*eosc.Action) (*eosc.PushTransactionFullResp, error) {
 	for _, action := range actions {
 		logger.Infof("Trx Account: %v Name: %v, Authorization: %v, Data: %v", action.Account, action.Name, action.Authorization, action.ActionData)
-		js, _ := json.Marshal(action.ActionData)
-		logger.Infof("Data json: %v", string(js))
+		// js, _ := json.Marshal(action.ActionData)
+		// logger.Infof("Data json: %v", string(js))
 	}
 	return m.API.SignPushActions(context.Background(), actions...)
 }

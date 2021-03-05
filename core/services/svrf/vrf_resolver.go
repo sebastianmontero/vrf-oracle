@@ -56,7 +56,7 @@ func (m *VRFResolver) Process(job *models.VRFRequestJob) (*models.VRFRequestRun,
 			m.failRun(run, err, 0)
 			return run, err
 		}
-
+		logger.Infof("Generating proof for assocId: %v and seed: %v", req.AssocID, seed)
 		proof, err := m.VRFKeyStore.GenerateEOSProof(*m.publicKey, vrf.PreSeedData{
 			PreSeed:   preSeed,
 			BlockHash: common.HexToHash(req.BlockHash),
@@ -69,6 +69,7 @@ func (m *VRFResolver) Process(job *models.VRFRequestJob) (*models.VRFRequestRun,
 		}
 		proofs = append(proofs, proof)
 	}
+	// logger.Infof("Calling SetRand for request: %v and proofs: %v", req, proofs)
 	_, err := m.VRFContract.SetRand(req.AssocID, req.Caller, proofs)
 	if err != nil {
 		err := fmt.Errorf("Calling SetRand on contract failed: %v", err)

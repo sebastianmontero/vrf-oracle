@@ -10,7 +10,7 @@ import (
 type VRFChainJob struct {
 	AssocID     uint64   `json:"assoc_id,omitempty"`
 	Seeds       []uint64 `json:"seeds,omitempty"`
-	CreatedDate int64    `json:"label,omitempty"`
+	CreatedDate string   `json:"created_date,omitempty"`
 	BlockNum    uint64
 	BlockHash   string
 	Caller      string

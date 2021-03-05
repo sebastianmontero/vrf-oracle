@@ -33,13 +33,13 @@ func (m *VRFDeltaHandler) OnDelta(delta *dfclient.TableDelta, cursor string, for
 			job.Caller = delta.Scope
 			job.BlockNum = uint64(delta.Block.Number)
 			job.BlockHash = delta.Block.Id
-			logger.Tracef("VRFChainJob: ", job)
+			logger.Infof("VRFChainJob: ", job)
 			request := job.VRFRequest()
 			cr := &models.Cursor{
 				ID:     models.CursorID_VRF_REQUESTS,
 				Cursor: cursor,
 			}
-			logger.Tracef("Storing: %v, v%", request, cr)
+			logger.Infof("Storing: %v, v%", request, cr)
 			err = m.Store.CreateVRFRequest(request, cr)
 			if err != nil {
 				logger.Panicf("Failed to store vrf request: %", request)
