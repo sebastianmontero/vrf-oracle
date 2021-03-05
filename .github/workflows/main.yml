@@ -10,24 +10,36 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:      
-      - name: Set docker-image-name to testnet
+      - name: Set docker image names to test
         if: endsWith(github.ref, '/dev')
         run: |
-          echo "DOCKER_IMAGE_NAME=vrf-oracle-testnet" >> $GITHUB_ENV
+          echo "DOCKER_IMAGE_NAME=vrf-oracle-test" >> $GITHUB_ENV
+          echo "DB_DOCKER_IMAGE_NAME=vrf-db-test" >> $GITHUB_ENV
       - name: Set docker-image-name to mainnet
         if: endsWith(github.ref, '/master')
         run: |
-          echo "DOCKER_IMAGE_NAME=vrf-oracle-mainnet" >> $GITHUB_ENV
+          echo "DOCKER_IMAGE_NAME=vrf-oracle-prod" >> $GITHUB_ENV
+          echo "DB_DOCKER_IMAGE_NAME=vrf-db-prod" >> $GITHUB_ENV
       - uses: actions/checkout@v1
       - name: Docker login
         run: docker login -u ${{ secrets.DOCKER_HUB_USER }} -p ${{ secrets.DOCKER_HUB_PASSWORD }}
-      - name: Build
+      - name: Build oracle image
         run: docker build -t $DOCKER_IMAGE_NAME .
-      - name: Tags
+      - name: Build db image
+        run: docker build -t $DB_DOCKER_IMAGE_NAME ./db
+      - name: Tag oracle image
         run: |
           docker tag $DOCKER_IMAGE_NAME ${{ secrets.DOCKER_HUB_USER }}/$DOCKER_IMAGE_NAME:${{ github.sha }}
           docker tag $DOCKER_IMAGE_NAME ${{ secrets.DOCKER_HUB_USER }}/$DOCKER_IMAGE_NAME:latest
-      - name: Push
+      - name: Tag db image
+        run: |
+          docker tag $DB_DOCKER_IMAGE_NAME ${{ secrets.DOCKER_HUB_USER }}/$DB_DOCKER_IMAGE_NAME:${{ github.sha }}
+          docker tag $DB_DOCKER_IMAGE_NAME ${{ secrets.DOCKER_HUB_USER }}/$DB_DOCKER_IMAGE_NAME:latest
+      - name: Push oracle image
         run: |
           docker push ${{ secrets.DOCKER_HUB_USER }}/$DOCKER_IMAGE_NAME:${{ github.sha }}
           docker push ${{ secrets.DOCKER_HUB_USER }}/$DOCKER_IMAGE_NAME:latest
+      - name: Push db image
+        run: |
+          docker push ${{ secrets.DOCKER_HUB_USER }}/$DB_DOCKER_IMAGE_NAME:${{ github.sha }}
+          docker push ${{ secrets.DOCKER_HUB_USER }}/$DB_DOCKER_IMAGE_NAME:latest
