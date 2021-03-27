@@ -177,7 +177,7 @@ ALTER SEQUENCE public.configurations_id_seq OWNED BY public.configurations.id;
 
 CREATE TABLE public.cursors (
     id text NOT NULL,
-    cursor character varying(200) NOT NULL
+    cursor character varying(1000) NOT NULL
 );
 
 
@@ -1675,6 +1675,7 @@ COPY public.direct_request_specs (id, contract_address, created_at, updated_at, 
 --
 
 COPY public.encrypted_ocr_key_bundles (id, on_chain_signing_address, off_chain_public_key, encrypted_private_keys, created_at, updated_at, config_public_key, deleted_at) FROM stdin;
+\\x54f02f2756952ee42874182c8a03d51f048b7fc245c05196af50f9266f8e444a	\\xc135508f4c9ada03e56bb6ad98d724e7f4c93323	\\xa91e8a88584c18ad895a259800fa768a63be8760dcc2924ffd6311833aefb8c5	{"kdf": "scrypt", "mac": "acbd1623b39799eedb1fc75698d8e2986599922930032c15a5a3721247c9b748", "cipher": "aes-128-ctr", "kdfparams": {"n": 2, "p": 1, "r": 8, "salt": "ea4f33d745169327d2cdf9f70945af1b67822282c9c01fc2278fa80d6d8e7795", "dklen": 32}, "ciphertext": "e92467755b4abadf162d5d450d963daebe5d2bed6450a77d7c22b705e4f01300a30714a5b4da9686255f569469dc0ed15b4a4fa0acc5439d4257315d7ba033e8c85b6d1a73e1cfc8d0e668e230d9a17117030851794e549dda99bdae7b06501d3d21762ff7b1f7fa494187effdb43cf611fd619d740bc310bb84ccaa449d65f23f1f264491a72b312d9061cea3d3de87168d835339621b38dbb3723b96a694fd86324d319948b4e061ceacb54ce44421f5bf914c158f4e95bf3da039bd0d257241c738488532d4b7fa5cd23d84a8e41ac6653e4b823a3f3f0eb37896d2efebcc3d6061e42a50703621130077e99b96186029661765c8baad9a1bab646a0a10331cc1caf3b9ab926bd39233f06677249bb7d5f5b0a8cb337a2bdce61f2a666128d7b310659e6b8d7dc3039fb876badc3fe961d46778ab905fed2134876cf82bde966b8fabebbc9629c23812b6c80952c06b032af6", "cipherparams": {"iv": "863123caab3f0ae5b3bff6a113a80095"}}	2020-10-29 04:34:25.960967-06	2020-10-29 04:34:25.960967-06	\\x69a2b241acdeee304040940c458f315e911a63d4d6ec16337b123326a00b951f	\N
 \.
 
 
@@ -1683,6 +1684,7 @@ COPY public.encrypted_ocr_key_bundles (id, on_chain_signing_address, off_chain_p
 --
 
 COPY public.encrypted_p2p_keys (id, peer_id, pub_key, encrypted_priv_key, created_at, updated_at, deleted_at) FROM stdin;
+1	12D3KooWCJUPKsYAnCRTQ7SUNULt4Z9qF8Uk1xadhCs7e9M711Lp	\\x24eaaa7f7f8cd6d91bc4a83becedf2bd3650c050d5b680683ae26f0f1e209fdd	{"kdf": "scrypt", "mac": "41957a416ab525a3d1409b0dc7ec2fdd4f14fed9082245c05ae42b71cb2d438b", "cipher": "aes-128-ctr", "kdfparams": {"n": 2, "p": 1, "r": 8, "salt": "032413f1267991b5f2b7d01d5bb912aa9bdf07e1b9b109c45bafb0caa75672bc", "dklen": 32}, "ciphertext": "724604086076ec161831f580a0fbd1c435cddc5a908f37a641c76f401c75f33cc09acefb579d03ca47874645c868515aa044de63e43cbbb19f13273490a7dea46fa421a5", "cipherparams": {"iv": "faed66382c086036966a80ed62cffb77"}}	2020-10-29 04:33:50.854527-06	2020-10-29 04:33:50.854527-06	\N
 \.
 
 
@@ -2068,6 +2070,7 @@ COPY public.task_specs (id, created_at, updated_at, deleted_at, type, confirmati
 --
 
 COPY public.users (email, hashed_password, created_at, token_key, token_salt, token_hashed_secret, updated_at, token_secret) FROM stdin;
+apiuser@chainlink.test	$2a$10$bbwErtZcZ6qQvRsfBiY2POvuY6D4lwj/Vxq/PcVAL6o64nRaPgaEa	2019-01-01 00:00:00-06	\N	\N	\N	2019-01-01 00:00:00-06	1eCP/w0llVkchejFaoBpfIGaLRxZK54lTXBCT22YLW+pdzE4Fafy/XO5LoJ2uwHi
 \.
 
 
@@ -2106,7 +2109,7 @@ SELECT pg_catalog.setval('public.configurations_id_seq', 1, false);
 -- Name: encrypted_p2p_keys_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.encrypted_p2p_keys_id_seq', 1, false);
+SELECT pg_catalog.setval('public.encrypted_p2p_keys_id_seq', 1, true);
 
 
 --

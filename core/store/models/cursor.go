@@ -12,7 +12,7 @@ const (
 //Cursor represents the cursor returned by firehose
 type Cursor struct {
 	ID     CursorID `gorm:"primary_key;varchar(20)"`
-	Cursor string   `gorm:"type:varchar(200);not null"`
+	Cursor string   `gorm:"type:varchar(1000);not null"`
 }
 
 func (m *Cursor) String() string {

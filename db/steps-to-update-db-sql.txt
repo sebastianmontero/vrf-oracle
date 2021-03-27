@@ -1,0 +1,13 @@
+1.-Update model(s) with their new structure
+2.-Set database url env var:
+  export DATABASE_URL="postgresql://postgres@localhost:5432/chainlink_test?sslmode=disable&password=postgres"
+3.-Run database creation script:
+  go run core/main.go local db preparetest
+4.-login as postgres user:
+  sudo su - postgres
+5.- Dump database without owner: 
+  pg_dump chainlink_test -O -x > vrf-db.sql
+6.- Move database to vrf-oracle/db (assuming you are in this dir):
+  sudo mv /var/lib/postgresql/vrf-db.sql ./
+7.-Update file owner:
+  sudo chown sebastian:sebastian vrf-db.sql
