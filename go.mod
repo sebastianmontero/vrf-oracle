@@ -46,7 +46,7 @@ require (
 	github.com/robfig/cron/v3 v3.0.1
 	github.com/satori/go.uuid v1.2.0
 	github.com/schollz/progressbar/v3 v3.7.4
-	github.com/sebastianmontero/dfuse-firehose-client v0.0.0-20210213204324-2c75717bc9ca
+	github.com/sebastianmontero/dfuse-firehose-client v0.0.0-20210326205105-b2a7b2ba2c5c
 	github.com/shopspring/decimal v1.2.0
 	github.com/smartcontractkit/libocr v0.0.0-20210114170344-699624b8b9fa
 	github.com/spf13/viper v1.7.1

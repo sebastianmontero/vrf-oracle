@@ -30,7 +30,7 @@ func (m *VRFChainJob) VRFRequest() *models.VRFRequest {
 }
 
 func (m *VRFChainJob) String() string {
-	return fmt.Sprintf("VRFChainJob{ AssocID: %v, Seeds: %v, CreatedDate: %v", m.AssocID, m.Seeds, m.CreatedDate)
+	return fmt.Sprintf("\nVRFChainJob{ \n\tAssocID: %v, \n\tSeeds: %v, \n\tCreatedDate: %v\n}", m.AssocID, m.Seeds, m.CreatedDate)
 }
 
 func (m *VRFChainJob) stringSeeds() []string {

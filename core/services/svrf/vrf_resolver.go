@@ -56,7 +56,6 @@ func (m *VRFResolver) Process(job *models.VRFRequestJob) (*models.VRFRequestRun,
 			m.failRun(run, err, 0)
 			return run, err
 		}
-		logger.Infof("Generating proof for assocId: %v and seed: %v", req.AssocID, seed)
 		proof, err := m.VRFKeyStore.GenerateEOSProof(*m.publicKey, vrf.PreSeedData{
 			PreSeed:   preSeed,
 			BlockHash: common.HexToHash(req.BlockHash),

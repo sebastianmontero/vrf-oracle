@@ -964,6 +964,11 @@ func (c Config) VRFKeyStorePassword() string {
 	return c.viper.GetString(EnvVarName("VRFKeyStorePassword"))
 }
 
+// VRFHeartBeatFrequency ferquency with wich the delta handler is notified of a block
+func (c Config) VRFHeartBeatFrequency() uint32 {
+	return c.getWithFallback("VRFHeartBeatFrequency", parseUint32).(uint32)
+}
+
 func (c Config) getWithFallback(name string, parser func(string) (interface{}, error)) interface{} {
 	str := c.viper.GetString(EnvVarName(name))
 	defaultValue, hasDefault := defaultValue(name)

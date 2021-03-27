@@ -52,13 +52,14 @@ func main() {
 	go vrfResolver.Consume(vrfRequestChannel)
 	logger.Infof("Cursor: %v", cursor)
 	deltaRequest := &dfclient.DeltaStreamRequest{
-		StartBlockNum:  config.VRFStartBlockNum(),
-		StartCursor:    cursor.Cursor,
-		StopBlockNum:   0,
-		ForkSteps:      []pbbstream.ForkStep{pbbstream.ForkStep_STEP_NEW},
-		ReverseUndoOps: true,
+		StartBlockNum:      config.VRFStartBlockNum(),
+		StartCursor:        cursor.Cursor,
+		StopBlockNum:       0,
+		ForkSteps:          []pbbstream.ForkStep{pbbstream.ForkStep_STEP_NEW},
+		ReverseUndoOps:     true,
+		HeartBeatFrequency: uint(config.VRFHeartBeatFrequency()),
 	}
-	logger.Infof("Contract: %v, Table: %v, ContractKey: %v, Loglevel: %v", config.VRFContract(), config.VRFJobTable(), config.VRFContractKey(), config.LogLevel())
+	logger.Infof("Contract: %v, Table: %v, Loglevel: %v", config.VRFContract(), config.VRFJobTable(), config.LogLevel())
 	// deltaRequest.AddTables("eosio.token", []string{"balance"})
 	deltaRequest.AddTables(config.VRFContract(), []string{config.VRFJobTable()})
 	client.DeltaStream(deltaRequest, &streamhandlers.VRFDeltaHandler{

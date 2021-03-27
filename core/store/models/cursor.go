@@ -16,5 +16,5 @@ type Cursor struct {
 }
 
 func (m *Cursor) String() string {
-	return fmt.Sprintf("Cursor{ ID: %v, Cursor: %v }", m.ID, m.Cursor)
+	return fmt.Sprintf("\nCursor{ \n\tID: %v, \n\tCursor: %v \n}", m.ID, m.Cursor)
 }

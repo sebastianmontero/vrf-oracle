@@ -223,6 +223,33 @@ func TestORM_SaveVRFRequestOptimisticLocking(t *testing.T) {
 	require.IsType(t, orm.ErrOptimisticUpdateConflict, err)
 }
 
+func TestORM_SaveCursor(t *testing.T) {
+	t.Parallel()
+	store, cleanup := cltest.NewStore(t)
+	defer cleanup()
+
+	cursor1 := &models.Cursor{
+		ID:     models.CursorID_VRF_REQUESTS,
+		Cursor: "c5",
+	}
+
+	err := store.SaveCursor(cursor1)
+	require.NoError(t, err)
+
+	cursor2, err := store.FindCursor(models.CursorID_VRF_REQUESTS)
+	require.NoError(t, err)
+	validateCursor(cursor2, cursor1, t)
+
+	cursor1.Cursor = "c7"
+
+	err = store.SaveCursor(cursor1)
+	require.NoError(t, err)
+
+	cursor2, err = store.FindCursor(models.CursorID_VRF_REQUESTS)
+	require.NoError(t, err)
+	validateCursor(cursor2, cursor1, t)
+}
+
 func TestORM_SaveVRFRequestJob(t *testing.T) {
 	t.Parallel()
 	store, cleanup := cltest.NewStore(t)

@@ -131,6 +131,7 @@ type ConfigSchema struct {
 	VRFJobTable                               string          `env:"VRF_JOB_TABLE" default:"jobs"`
 	VRFContractKey                            string          `env:"VRF_CONTRACT_KEY"`
 	VRFKeyStorePassword                       string          `env:"VRF_KEY_STORE_PASSWORD"`
+	VRFHeartBeatFrequency                     uint32          `env:"VRF_HEART_BEAT_FREQUENCY" default:"100"`
 }
 
 // EnvVarName gets the environment variable name for a config schema field

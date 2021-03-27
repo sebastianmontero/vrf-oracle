@@ -52,7 +52,7 @@ type setRand struct {
 }
 
 func (m *setRand) String() string {
-	return fmt.Sprintf("AssocID: %v, Caller %v, Proofs: %v", m.AssocID, m.Caller, m.Proofs)
+	return fmt.Sprintf("\nsetRand{\n\tAssocID: %v, \n\tCaller %v, \n\tProofs: %v\n}", m.AssocID, m.Caller, m.Proofs)
 }
 
 type requestRand struct {

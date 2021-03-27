@@ -36,3 +36,6 @@ dockercfg
 env
 credentials.env
 gcr_creds.env
+
+# Test Utils
+scripts/zap-pretty

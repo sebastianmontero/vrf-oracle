@@ -7,6 +7,7 @@ import (
 	"github.com/pkg/errors"
 	"go.uber.org/multierr"
 
+	"github.com/sebastianmontero/vrf-oracle/core/logger"
 	"github.com/sebastianmontero/vrf-oracle/core/services/vrf"
 	"github.com/sebastianmontero/vrf-oracle/core/store/models/vrfkey"
 	"github.com/sebastianmontero/vrf-oracle/core/utils"
@@ -78,6 +79,7 @@ func (ks *VRFKeyStore) GenerateUnmarshaledProof(k vrfkey.PublicKey, i vrf.PreSee
 // requires the secret key.
 func (ks *VRFKeyStore) GenerateEOSProof(k vrfkey.PublicKey, i vrf.PreSeedData) (
 	*vrf.EOSProofResponse, error) {
+	logger.Infof("Generating proof with: \npublicKey: %v \nseed: %v", k, &i)
 	ks.lock.RLock()
 	defer ks.lock.RUnlock()
 	privateKey, found := ks.keys[k]

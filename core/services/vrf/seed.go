@@ -1,6 +1,7 @@
 package vrf
 
 import (
+	"fmt"
 	"math/big"
 
 	"github.com/ethereum/go-ethereum/common"
@@ -42,6 +43,10 @@ type PreSeedData struct {
 	PreSeed   Seed        // Seed to be mixed with hash of containing block
 	BlockHash common.Hash // Hash of block containing VRF request
 	BlockNum  uint64      // Cardinal number of block containing VRF request
+}
+
+func (m *PreSeedData) String() string {
+	return fmt.Sprintf("\nPreSeedData{ \n\tPreSeed: %v, \n\tBlockHash: %v, \n\tBlockNum: %v \n}", m.PreSeed.Big(), m.BlockHash, m.BlockNum)
 }
 
 // FinalSeed is the seed which is actually passed to the VRF proof generator,

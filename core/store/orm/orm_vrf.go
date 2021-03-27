@@ -14,7 +14,7 @@ func (orm *ORM) CreateVRFRequest(req *models.VRFRequest, cursor *models.Cursor) 
 		if err != nil {
 			return err
 		}
-		return orm.SaveCursor(cursor, dbtx)
+		return orm.SaveCursorTrx(cursor, dbtx)
 	})
 }
 
@@ -34,7 +34,7 @@ func (orm *ORM) SaveVRFRequest(req *models.VRFRequest, cursor *models.Cursor) er
 		if err != nil {
 			return err
 		}
-		return orm.SaveCursor(cursor, dbtx)
+		return orm.SaveCursorTrx(cursor, dbtx)
 	})
 }
 
@@ -55,13 +55,16 @@ func (orm *ORM) saveVRFRequest(req *models.VRFRequest, cursor *models.Cursor, db
 }
 
 // SaveCursor saves cursor
-func (orm *ORM) SaveCursor(cursor *models.Cursor, dbtx *gorm.DB) error {
-	return orm.convenientTransaction(func(dbtx *gorm.DB) error {
-		if cursor != nil {
-			return dbtx.Save(cursor).Error
-		}
-		return nil
-	})
+func (orm *ORM) SaveCursor(cursor *models.Cursor) error {
+	return orm.SaveCursorTrx(cursor, orm.DB)
+}
+
+// SaveCursorTrx saves cursor as part of the transaction passed in as parameter
+func (orm *ORM) SaveCursorTrx(cursor *models.Cursor, dbtx *gorm.DB) error {
+	if cursor != nil {
+		return dbtx.Save(cursor).Error
+	}
+	return nil
 }
 
 // FindCursor looks up a Cursor by its ID.

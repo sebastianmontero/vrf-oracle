@@ -21,7 +21,7 @@ type VRFDeltaHandler struct {
 }
 
 func (m *VRFDeltaHandler) OnDelta(delta *dfclient.TableDelta, cursor string, forkStep pbbstream.ForkStep) {
-	logger.Debugf("On Delta: \nCursor: %v \nFork Step: %v \nDelta %v ", cursor, forkStep, delta)
+	logger.Infof("On Delta: \nCursor: %v \nFork Step: %v \nDelta %v ", cursor, forkStep, delta)
 	if delta.TableName == m.JobTable {
 		switch delta.Operation {
 		case pbcodec.DBOp_OPERATION_INSERT:
@@ -42,7 +42,7 @@ func (m *VRFDeltaHandler) OnDelta(delta *dfclient.TableDelta, cursor string, for
 			logger.Infof("Storing: %v, v%", request, cr)
 			err = m.Store.CreateVRFRequest(request, cr)
 			if err != nil {
-				logger.Panicf("Failed to store vrf request: %", request)
+				logger.Panicf("Failed to store vrf request: %v, error: %v", request, err)
 			}
 			m.Consumer <- request
 		case pbcodec.DBOp_OPERATION_UPDATE:
@@ -52,6 +52,16 @@ func (m *VRFDeltaHandler) OnDelta(delta *dfclient.TableDelta, cursor string, for
 		}
 	}
 	m.Cursor = cursor
+}
+
+func (m *VRFDeltaHandler) OnHeartBeat(block *pbcodec.Block, cursor string) {
+	err := m.Store.SaveCursor(&models.Cursor{
+		ID:     models.CursorID_VRF_REQUESTS,
+		Cursor: cursor,
+	})
+	if err != nil {
+		logger.Panicf("Failed to update cursor: %v, error: %v", cursor, err)
+	}
 }
 
 func (m *VRFDeltaHandler) OnError(err error) {

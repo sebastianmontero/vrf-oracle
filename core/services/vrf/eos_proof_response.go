@@ -40,7 +40,7 @@ func NewEOSProofResponse(pr *ProofResponse) *EOSProofResponse {
 
 func (m *EOSProofResponse) String() string {
 	return fmt.Sprintf(
-		"EOSProofResponse{ BlockNum: %v, BlockID: %v, Seed: %v, FinalSeed: %v, PublicKey: %v, Gamma: %v, C: %v, S: %v, OutputU256: %v, OutputU64: %v}",
+		"\nEOSProofResponse{ \n\tBlockNum: %v, \n\tBlockID: %v, \n\tSeed: %v, \n\tFinalSeed: %v, \n\tPublicKey: %v, \n\tGamma: %v, \n\tC: %v, \n\tS: %v, \n\tOutputU256: %v, \n\tOutputU64: %v\n}",
 		m.BlockNum,
 		string(m.BlockID),
 		m.Seed,
