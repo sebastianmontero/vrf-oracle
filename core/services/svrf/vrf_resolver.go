@@ -3,6 +3,7 @@ package svrf
 import (
 	"fmt"
 	"math/big"
+	"time"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/sebastianmontero/vrf-oracle/core/logger"
@@ -69,6 +70,7 @@ func (m *VRFResolver) Process(job *models.VRFRequestJob) (*models.VRFRequestRun,
 		proofs = append(proofs, proof)
 	}
 	// logger.Infof("Calling SetRand for request: %v and proofs: %v", req, proofs)
+	time.Sleep(time.Second)
 	_, err := m.VRFContract.SetRand(req.AssocID, req.Caller, proofs)
 	if err != nil {
 		err := fmt.Errorf("Calling SetRand on contract failed: %v", err)
