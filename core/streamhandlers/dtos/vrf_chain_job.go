@@ -3,13 +3,34 @@ package dtos
 import (
 	"fmt"
 	"strconv"
+	"strings"
 
 	"github.com/sebastianmontero/vrf-oracle/core/store/models"
 )
 
+//Required becuase sometimes unit64 is sent as string
+type STRING string
+
+func (m *STRING) UnmarshalJSON(b []byte) error {
+	*m = STRING(strings.ReplaceAll(string(b), `"`, ""))
+	return nil
+}
+
+//Required becuase sometimes unit64 is sent as string
+type UINT64 uint64
+
+func (m *UINT64) UnmarshalJSON(b []byte) error {
+	v, err := strconv.ParseUint(strings.ReplaceAll(string(b), `"`, ""), 10, 64)
+	if err != nil {
+		return err
+	}
+	*m = UINT64(v)
+	return nil
+}
+
 type VRFChainJob struct {
-	AssocID     uint64   `json:"assoc_id,omitempty"`
-	Seeds       []uint64 `json:"seeds,omitempty"`
+	AssocID     UINT64   `json:"assoc_id,omitempty"`
+	Seeds       []STRING `json:"seeds,omitempty"`
 	CreatedDate string   `json:"created_date,omitempty"`
 	BlockNum    uint64
 	BlockHash   string
@@ -18,7 +39,7 @@ type VRFChainJob struct {
 
 func (m *VRFChainJob) VRFRequest() *models.VRFRequest {
 	return &models.VRFRequest{
-		AssocID:   m.AssocID,
+		AssocID:   uint64(m.AssocID),
 		BlockNum:  m.BlockNum,
 		BlockHash: m.BlockHash,
 		Seeds:     m.stringSeeds(),
@@ -36,7 +57,7 @@ func (m *VRFChainJob) String() string {
 func (m *VRFChainJob) stringSeeds() []string {
 	ss := make([]string, 0, len(m.Seeds))
 	for _, seed := range m.Seeds {
-		ss = append(ss, strconv.FormatUint(seed, 10))
+		ss = append(ss, string(seed))
 	}
 	return ss
 }
