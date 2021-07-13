@@ -24,7 +24,7 @@ func (m *VRFDeltaHandler) OnDelta(delta *dfclient.TableDelta, cursor string, for
 	logger.Infof("On Delta: \nCursor: %v \nFork Step: %v \nDelta %v ", cursor, forkStep, delta)
 	if delta.TableName == m.JobTable {
 		switch delta.Operation {
-		case pbcodec.DBOp_OPERATION_INSERT:
+		case pbcodec.DBOp_OPERATION_INSERT, pbcodec.DBOp_OPERATION_UPDATE:
 			job := &dtos.VRFChainJob{}
 			err := json.Unmarshal(delta.NewData, job)
 			if err != nil {
@@ -45,8 +45,6 @@ func (m *VRFDeltaHandler) OnDelta(delta *dfclient.TableDelta, cursor string, for
 				logger.Panicf("Failed to store vrf request: %v, error: %v", request, err)
 			}
 			m.Consumer <- request
-		case pbcodec.DBOp_OPERATION_UPDATE:
-			logger.Panicf("VRF table updates should not be happening: %v", delta)
 		case pbcodec.DBOp_OPERATION_REMOVE:
 			logger.Tracef("Not handling vrf job removals: %v", string(delta.OldData))
 		}
